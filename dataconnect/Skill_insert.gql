@@ -1,0 +1,7 @@
+# This is a file for you to write an un-named mutation. 
+# Only one un-named mutation is allowed per file.
+mutation {
+  skill_insert(
+    data: {id: "11111111222233334444555555555555", authorClerkId: "user_3CtTkqlw4jgfLKyJyhMVfeKcuoz", createdAt: "2026-04-26T12:37:18.999Z", description: "Adds route-level auth guard helpers for protected pages.", installCommand: "npx cursor-skills add tanstack-router-guard", promptConfig: "", tags: ["tanstack-router", "auth", "guards"], title: "TanStack Router Guard", updatedAt: "2026-04-26T12:37:18.999Z", usageExample: "This is a usage example for the TanStack Router Guard skill."}
+  )
+}
