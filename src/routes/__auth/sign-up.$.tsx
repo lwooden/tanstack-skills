@@ -7,12 +7,12 @@ export const Route = createFileRoute("/__auth/sign-up/$")({
 
 function RouteComponent() {
 	return (
-		<section id="sign-uo">
+		<section id="sign-up">
 			{/* fully customizable clerk login component */}
 			<SignUp
 				routing="path"
-				path="/sign-in"
-				signInUrl="/sign-in"
+				path="/sign-up"
+				signInUrl="/sign-up"
 				fallbackRedirectUrl={"/"}
 			/>
 		</section>
