@@ -1,50 +1,52 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
 import { Terminal } from "lucide-react";
 import { SkillCard } from "#/components/SkillCard";
+import { getSkills } from "#/dataconnect-generated";
+import { dataConnect } from "#/lib/firebase";
 
-export const Route = createFileRoute("/")({ component: Home });
+// Data Fetching Process
+// Step 1: Define higher-order server function that runs the getSkills query
+const getSkillsFn = createServerFn({ method: "GET" }).handler(async () => {
+	try {
+		const { data } = await getSkills(dataConnect, {
+			searchTerm: "",
+			limit: 10,
+		});
+		console.log("Server-side data fetch: ", data.skills);
+		return data.skills;
+	} catch (error) {
+		console.error(error);
+		return [];
+	}
+});
 
-const skills: SkillRecord[] = [
-	{
-		id: "skill-001",
-		title: "TanStack Router Guard",
-		slug: "tanstack-router-guard",
-		description: "Adds route-level auth guard helpers for protected pages.",
-		category: "routing",
-		tags: ["tanstack-router", "auth", "guards"],
-		installCommand: "npx cursor-skills add tanstack-router-guard",
-		createdAt: "2026-04-20T14:30:00.000Z",
-		authorClerkId: "user_2f3ab9",
-		authorEmail: "dev@example.com",
-	},
-	{
-		id: "skill-002",
-		title: "Firestore Query Optimizer",
-		slug: "firestore-query-optimizer",
-		description: "Generates indexed query patterns for Firestore collections.",
-		category: "database",
-		tags: ["firestore", "performance", "queries"],
-		installCommand: "npx cursor-skills add firestore-query-optimizer",
-		createdAt: "2026-04-22T09:10:00.000Z",
-		authorClerkId: null,
-		authorEmail: "maintainer@example.com",
-	},
-	{
-		id: "skill-003",
-		title: "Biome Lint Preset",
-		slug: "biome-lint-preset",
-		description:
-			"Applies a strict Biome lint + format baseline for TS projects.",
-		category: "tooling",
-		tags: ["biome", "lint", "typescript"],
-		installCommand: "npx cursor-skills add biome-lint-preset",
-		createdAt: null,
-		authorClerkId: "user_8c92d1",
-		authorEmail: null,
-	},
-];
+export const Route = createFileRoute("/")({
+	component: Home,
+	// Step 2: Define loader function in the Route Definition that calls the higher-order server function
+	// This setup allows TanStack Router to fetch the data before the component is rendered
+	loader: () => getSkillsFn(),
+});
+
+// const skills: SkillRecord[] = [
+// 	{
+// 		id: "skill-001",
+// 		title: "TanStack Router Guard",
+// 		slug: "tanstack-router-guard",
+// 		description: "Adds route-level auth guard helpers for protected pages.",
+// 		category: "routing",
+// 		tags: ["tanstack-router", "auth", "guards"],
+// 		installCommand: "npx cursor-skills add tanstack-router-guard",
+// 		createdAt: "2026-04-20T14:30:00.000Z",
+// 		authorClerkId: "user_2f3ab9",
+// 		authorEmail: "dev@example.com",
+// 	}
+//
+// ];
 
 function Home() {
+	// Step 3: Access the loader data in the component
+	const skills = Route.useLoaderData();
 	return (
 		<div id="home">
 			<section className="hero">
