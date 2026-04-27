@@ -11,6 +11,6 @@ const firebaseConfig = {
 
 export const firebaseApp = !getApps().length
 	? initializeApp(firebaseConfig)
-	: getApps();
+	: getApps()[0];
 
 export const dataConnect = getDataConnect(connectorConfig, firebaseApp);
