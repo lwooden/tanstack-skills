@@ -1,0 +1,26 @@
+# Define Mutation
+mutation CreateSkill(
+  $authorClerkId: String!
+  $title: String!
+  $description: String
+  $tags: [String!]!
+  $installCommand: String!
+  $promptConfig: String!
+  $usageExample: String!
+)
+@auth(
+  level: PUBLIC
+  insecureReason: "Public access is required for this operation"
+) {
+  skill_insert(
+    data: {
+      authorClerkId: $authorClerkId
+      title: $title
+      description: $description
+      tags: $tags
+      installCommand: $installCommand
+      promptConfig: $promptConfig
+      usageExample: $usageExample
+    }
+  )
+}

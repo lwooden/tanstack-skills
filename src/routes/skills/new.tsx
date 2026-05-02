@@ -1,9 +1,10 @@
+import { auth } from "@clerk/tanstack-react-start/server";
 import { useForm } from "@tanstack/react-form";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
 import { ArrowLeft, Loader2, Zap } from "lucide-react";
 import { toast } from "sonner";
 import * as z from "zod";
-
 import { Button } from "#/components/ui/button";
 import {
 	Field,
@@ -13,6 +14,44 @@ import {
 } from "#/components/ui/field";
 import { Input } from "#/components/ui/input";
 import { Textarea } from "#/components/ui/textarea";
+import { createSkill } from "#/dataconnect-generated";
+import { dataConnect } from "#/lib/firebase";
+
+// Step 2 - Define Higher Order Tanstack Server Function that calls createSkill Mutation in connector/queries
+export const createSkillFn = createServerFn({ method: "POST" })
+	.inputValidator((d: SubmitSkillFormValues) => d)
+	.handler(async ({ data }) => {
+		const { userId } = await auth();
+		const {
+			title,
+			description,
+			tags,
+			installCommand,
+			promptConfig,
+			usageExample,
+		} = data;
+
+		if (!userId) {
+			throw new Error("You must be signed in!");
+		}
+
+		const result = await createSkill(dataConnect, {
+			authorClerkId: userId,
+			title,
+			description,
+			tags: tags
+				.split(",")
+				.map((tag) => tag.trim())
+				.filter(Boolean),
+			installCommand,
+			promptConfig,
+			usageExample,
+		});
+
+		console.log("Firebase Mutation Response: ", result);
+
+		return result.data.skill_insert;
+	});
 
 const submitSkillSchema = z.object({
 	title: z
@@ -37,7 +76,7 @@ const submitSkillSchema = z.object({
 					.filter(Boolean).length > 0,
 			{ message: "Tags must be comma-separated values (e.g. firebase, auth)" },
 		),
-	installationCommand: z
+	installCommand: z
 		.string()
 		.trim()
 		.min(3, "Install command is required")
@@ -60,7 +99,7 @@ const defaultValues: SubmitSkillFormValues = {
 	title: "",
 	description: "",
 	tags: "",
-	installationCommand: "",
+	installCommand: "",
 	promptConfig: "",
 	usageExample: "",
 };
@@ -70,13 +109,25 @@ export const Route = createFileRoute("/skills/new")({
 });
 
 function RouteComponent() {
+	const navigate = Route.useNavigate();
+
 	const form = useForm({
 		defaultValues,
 		validators: {
 			onSubmit: submitSkillSchema,
 		},
-		onSubmit: async () => {
-			toast.success("Form submitted successfully");
+		// Step 3 - Call createSkillFn server function
+
+		onSubmit: async ({ value }) => {
+			try {
+				await createSkillFn({ data: value });
+				toast.success("Form submitted successfully");
+				form.reset(defaultValues);
+				navigate({ to: "/" });
+			} catch (error) {
+				console.error("Error creating skill: ", error);
+				toast.error("Failed to publish skill!");
+			}
 		},
 	});
 
@@ -194,7 +245,7 @@ function RouteComponent() {
 				<div className="block">
 					<FieldGroup>
 						<form.Field
-							name="installationCommand"
+							name="installCommand"
 							children={(field) => {
 								const isInvalid =
 									field.state.meta.isTouched && !field.state.meta.isValid;

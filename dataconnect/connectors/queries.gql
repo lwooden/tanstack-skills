@@ -1,3 +1,5 @@
+# Step 1 - Define Query
+
 query GetSkills($searchTerm: String = "", $limit: Int = 10)
 @auth(level: PUBLIC, insecureReason: "Skills should be visible to everyone") {
   skills(
