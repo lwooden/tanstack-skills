@@ -13,7 +13,7 @@ const getSkillsFn = createServerFn({ method: "GET" }).handler(async () => {
 			searchTerm: "",
 			limit: 10,
 		});
-		console.log("Skill Server-side data fetch: ", data.skills);
+		console.log("getSkills Server-side data fetch: ", data.skills);
 		return data.skills;
 	} catch (error) {
 		console.error(error);
