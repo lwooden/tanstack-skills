@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import z from "zod";
+import Search from "#/components/Search";
 import { SkillCard } from "#/components/SkillCard";
 import { type GetSkillsData, getSkills } from "#/dataconnect-generated";
 import { dataConnect } from "#/lib/firebase";
@@ -48,6 +49,18 @@ function RouteComponent() {
 	// now I have access to searchParams given to use by Tanstack Router
 	const { q } = Route.useSearch();
 	const skills = Route.useLoaderData();
+
+	const navigate = Route.useNavigate();
+
+	const handleQueryChange = (value: string) => {
+		if (value === q) return;
+
+		navigate({
+			search: (prev) => ({ ...prev, q: value, page: 1 }),
+			replace: true,
+		});
+	};
+
 	return (
 		<div id="skills-page">
 			<section className="intro">
@@ -57,24 +70,31 @@ function RouteComponent() {
 					</h1>
 					<p>Browse resusable AI capabilites</p>
 				</header>
-				<Link to="/skills/new" className="btn-secondary">
-					Submit Skill
-				</Link>
-				<section className="results">
-					{skills.length > 0 ? (
-						<div className="skills-grid">
-							{skills.map((skill) => (
-								<SkillCard key={skill.id} {...skill} />
-							))}
-						</div>
-					) : (
-						<p className="empty-state">
-							{q
-								? `No skills found for ${q}`
-								: `No skills have been created yet!`}
-						</p>
-					)}
-				</section>
+
+				<Search
+					query={q}
+					resultCount={skills.length}
+					onQueryChange={handleQueryChange}
+				/>
+			</section>
+
+			{/* <Link to="/skills/new" className="btn-secondary">
+				Submit Skill
+			</Link> */}
+			<section className="results">
+				{skills.length > 0 ? (
+					<div className="skills-grid">
+						{skills.map((skill) => (
+							<SkillCard key={skill.id} {...skill} />
+						))}
+					</div>
+				) : (
+					<p className="empty-state">
+						{q
+							? `No skills found for ${q}`
+							: `No skills have been created yet!`}
+					</p>
+				)}
 			</section>
 		</div>
 	);
