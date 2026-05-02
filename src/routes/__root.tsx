@@ -47,7 +47,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en" className="dark">
+		<html lang="en" className="light">
 			<head>
 				<HeadContent />
 			</head>
@@ -78,9 +78,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 							TanStackQueryDevtools,
 						]}
 					/>
+					<Toaster />
 				</ClerkProvider>
 				<Scripts />
-				<Toaster />
 			</body>
 		</html>
 	);
