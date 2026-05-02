@@ -7,6 +7,7 @@ import {
 	Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { Toaster } from "sonner";
 import Crosshair from "#/components/Crosshair";
 import { Navbar } from "#/components/Navbar";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
@@ -79,6 +80,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 					/>
 				</ClerkProvider>
 				<Scripts />
+				<Toaster />
 			</body>
 		</html>
 	);
