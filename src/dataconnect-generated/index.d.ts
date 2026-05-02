@@ -45,6 +45,7 @@ export interface GetSkillsData {
 export interface GetSkillsVariables {
   searchTerm?: string | null;
   limit?: number | null;
+  offset?: number | null;
 }
 
 export interface Skill_Key {
@@ -57,18 +58,6 @@ export interface User_Key {
   __typename?: 'User_Key';
 }
 
-interface GetSkillsRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (vars?: GetSkillsVariables): QueryRef<GetSkillsData, GetSkillsVariables>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect, vars?: GetSkillsVariables): QueryRef<GetSkillsData, GetSkillsVariables>;
-  operationName: string;
-}
-export const getSkillsRef: GetSkillsRef;
-
-export function getSkills(vars?: GetSkillsVariables, options?: ExecuteQueryOptions): QueryPromise<GetSkillsData, GetSkillsVariables>;
-export function getSkills(dc: DataConnect, vars?: GetSkillsVariables, options?: ExecuteQueryOptions): QueryPromise<GetSkillsData, GetSkillsVariables>;
-
 interface CreateSkillRef {
   /* Allow users to create refs without passing in DataConnect */
   (vars: CreateSkillVariables): MutationRef<CreateSkillData, CreateSkillVariables>;
@@ -80,4 +69,16 @@ export const createSkillRef: CreateSkillRef;
 
 export function createSkill(vars: CreateSkillVariables): MutationPromise<CreateSkillData, CreateSkillVariables>;
 export function createSkill(dc: DataConnect, vars: CreateSkillVariables): MutationPromise<CreateSkillData, CreateSkillVariables>;
+
+interface GetSkillsRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars?: GetSkillsVariables): QueryRef<GetSkillsData, GetSkillsVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars?: GetSkillsVariables): QueryRef<GetSkillsData, GetSkillsVariables>;
+  operationName: string;
+}
+export const getSkillsRef: GetSkillsRef;
+
+export function getSkills(vars?: GetSkillsVariables, options?: ExecuteQueryOptions): QueryPromise<GetSkillsData, GetSkillsVariables>;
+export function getSkills(dc: DataConnect, vars?: GetSkillsVariables, options?: ExecuteQueryOptions): QueryPromise<GetSkillsData, GetSkillsVariables>;
 

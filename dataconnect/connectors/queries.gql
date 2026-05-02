@@ -1,6 +1,6 @@
 # Step 1 - Define Query
 
-query GetSkills($searchTerm: String = "", $limit: Int = 10)
+query GetSkills($searchTerm: String = "", $limit: Int = 10, $offset: Int = 0)
 @auth(level: PUBLIC, insecureReason: "Skills should be visible to everyone") {
   skills(
     where: {
@@ -11,6 +11,7 @@ query GetSkills($searchTerm: String = "", $limit: Int = 10)
     }
     orderBy: [{ createdAt: DESC }]
     limit: $limit
+    offset: $offset
   ) {
     id
     title
