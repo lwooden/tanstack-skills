@@ -6,14 +6,14 @@ import { getSkills } from "#/dataconnect-generated";
 import { dataConnect } from "#/lib/firebase";
 
 // Data Fetching Process
-// Step 1: Define higher-order server function that runs the getSkills query
+// Step 2: Define higher-order server function that runs the getSkills query from connectors/queries
 const getSkillsFn = createServerFn({ method: "GET" }).handler(async () => {
 	try {
 		const { data } = await getSkills(dataConnect, {
 			searchTerm: "",
 			limit: 10,
 		});
-		console.log("Server-side data fetch: ", data.skills);
+		console.log("Skill Server-side data fetch: ", data.skills);
 		return data.skills;
 	} catch (error) {
 		console.error(error);
@@ -23,8 +23,9 @@ const getSkillsFn = createServerFn({ method: "GET" }).handler(async () => {
 
 export const Route = createFileRoute("/")({
 	component: Home,
-	// Step 2: Define loader function in the Route Definition that calls the higher-order server function
+	// Step 3: Define loader function in the Route Definition that calls the higher-order server function
 	// This setup allows TanStack Router to fetch the data before the component is rendered
+
 	loader: () => getSkillsFn(),
 });
 
@@ -45,7 +46,7 @@ export const Route = createFileRoute("/")({
 // ];
 
 function Home() {
-	// Step 3: Access the loader data in the component
+	// Step 4: Access the loader data in the component
 	const skills = Route.useLoaderData();
 	return (
 		<div id="home">
