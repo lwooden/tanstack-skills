@@ -36,7 +36,7 @@ export const SkillCard = (skill: SkillCardProps) => {
 		<article className="skill-card">
 			<Link
 				className="overlay "
-				to="/skills"
+				to="/skills/$skillId"
 				tabIndex={-1}
 				aria-label={`Open ${skill.title}`}
 			>
@@ -69,7 +69,11 @@ export const SkillCard = (skill: SkillCardProps) => {
 					<p className="category">{skill.tags[0] ?? "General"}</p>
 				</div>
 				<div className="summary">
-					<Link className="title-link" to="/skills">
+					<Link
+						className="title-link"
+						to="/skills/$skillId"
+						params={{ skillId: skill.id }}
+					>
 						<h3>{skill.title}</h3>
 					</Link>
 					<p>{skill.description}</p>

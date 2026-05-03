@@ -25,6 +25,29 @@ export interface CreateSkillVariables {
   usageExample: string;
 }
 
+export interface GetSkillByIdData {
+  skill?: {
+    id: UUIDString;
+    title: string;
+    description?: string | null;
+    tags: string[];
+    createdAt: TimestampString;
+    installCommand: string;
+    promptConfig: string;
+    usageExample: string;
+    author: {
+      username?: string | null;
+      email: string;
+      imageUrl?: string | null;
+      clerkId: string;
+    } & User_Key;
+  } & Skill_Key;
+}
+
+export interface GetSkillByIdVariables {
+  id: UUIDString;
+}
+
 export interface GetSkillsData {
   skills: ({
     id: UUIDString;
@@ -81,4 +104,16 @@ export const getSkillsRef: GetSkillsRef;
 
 export function getSkills(vars?: GetSkillsVariables, options?: ExecuteQueryOptions): QueryPromise<GetSkillsData, GetSkillsVariables>;
 export function getSkills(dc: DataConnect, vars?: GetSkillsVariables, options?: ExecuteQueryOptions): QueryPromise<GetSkillsData, GetSkillsVariables>;
+
+interface GetSkillByIdRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (vars: GetSkillByIdVariables): QueryRef<GetSkillByIdData, GetSkillByIdVariables>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect, vars: GetSkillByIdVariables): QueryRef<GetSkillByIdData, GetSkillByIdVariables>;
+  operationName: string;
+}
+export const getSkillByIdRef: GetSkillByIdRef;
+
+export function getSkillById(vars: GetSkillByIdVariables, options?: ExecuteQueryOptions): QueryPromise<GetSkillByIdData, GetSkillByIdVariables>;
+export function getSkillById(dc: DataConnect, vars: GetSkillByIdVariables, options?: ExecuteQueryOptions): QueryPromise<GetSkillByIdData, GetSkillByIdVariables>;
 
